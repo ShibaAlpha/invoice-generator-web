@@ -107,12 +107,11 @@ function updateRemoveButtons() {
 function getLineItems() {
     const items = [];
     document.querySelectorAll('.line-item').forEach(item => {
-        const desc = item.querySelector('.item-desc').value;
-        const qty = parseFloat(item.querySelector('.item-qty').value) || 0;
+        const desc = item.querySelector('.item-desc').value.trim();
+        const qty = parseFloat(item.querySelector('.item-qty').value) || 1;
         const price = parseFloat(item.querySelector('.item-price').value) || 0;
-        if (desc && (qty > 0 || price > 0)) {
-            items.push({ description: desc, quantity: qty, unitPrice: price });
-        }
+        if (!desc) return; // Skip if no description
+        items.push({ description: desc, quantity: qty, unitPrice: price });
     });
     return items;
 }
