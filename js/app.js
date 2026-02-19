@@ -63,6 +63,11 @@ function initInvoiceForm() {
 
 function addLineItem() {
     const container = document.getElementById('lineItems');
+    if (!container) {
+        console.error('lineItems container not found!');
+        return;
+    }
+    
     const index = container.children.length;
     
     const item = document.createElement('div');
@@ -70,21 +75,25 @@ function addLineItem() {
     item.dataset.index = index;
     item.innerHTML = `
         <div class="line-item-header">
-            <input type="text" placeholder="Item description" class="item-desc">
-            <button type="button" class="remove-btn" onclick="removeLineItem(${index})">&times;</button>
+            <input type="text" placeholder="Item description" class="item-desc" name="item-desc-${index}">
+            <button type="button" class="remove-btn" data-index="${index}">&times;</button>
         </div>
         <div class="line-item-row">
             <div class="qty">
-                <input type="number" placeholder="Qty" value="1" min="1" class="item-qty" onchange="updateTotals()">
+                <input type="number" placeholder="Qty" value="1" min="1" class="item-qty" data-idx="${index}">
             </div>
             <div class="price">
-                <input type="number" placeholder="Price" value="0" min="0" step="0.01" class="item-price" onchange="updateTotals()">
+                <input type="number" placeholder="Price" value="0" min="0" step="0.01" class="item-price" data-idx="${index}">
             </div>
             <div class="item-total">£0.00</div>
         </div>
     `;
     container.appendChild(item);
     updateRemoveButtons();
+    
+    // Bind remove button event
+    const removeBtn = item.querySelector('.remove-btn');
+    removeBtn.addEventListener('click', () => removeLineItem(index));
 }
 
 function removeLineItem(index) {
@@ -145,6 +154,14 @@ function saveInvoice(e) {
     e.preventDefault();
     
     const items = getLineItems();
+    
+    // Debug: Log items
+    console.log('Line items found:', items.length);
+    document.querySelectorAll('.line-item').forEach((item, idx) => {
+        const desc = item.querySelector('.item-desc');
+        console.log(`Item ${idx}: desc="${desc ? desc.value : 'NOT FOUND'}"`);
+    });
+    
     if (items.length === 0) {
         showToast('Please add at least one item');
         return;
