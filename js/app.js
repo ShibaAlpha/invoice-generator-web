@@ -155,15 +155,18 @@ function saveInvoice(e) {
     
     const items = getLineItems();
     
-    // Debug: Log items
-    console.log('Line items found:', items.length);
-    document.querySelectorAll('.line-item').forEach((item, idx) => {
-        const desc = item.querySelector('.item-desc');
-        console.log(`Item ${idx}: desc="${desc ? desc.value : 'NOT FOUND'}"`);
-    });
+    // Debug: Show alert with items count
+    const lineItemCount = document.querySelectorAll('.line-item').length;
+    const descInputs = document.querySelectorAll('.item-desc');
+    const firstDesc = descInputs.length > 0 ? descInputs[0].value : 'empty';
+    
+    console.log('=== DEBUG SAVE ===');
+    console.log('Line items in DOM:', lineItemCount);
+    console.log('First item desc:', firstDesc);
+    console.log('Items array length:', items.length);
     
     if (items.length === 0) {
-        showToast('Please add at least one item');
+        showToast('Please add at least one item (desc: "' + firstDesc + '")');
         return;
     }
     
