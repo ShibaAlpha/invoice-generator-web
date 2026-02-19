@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Invoice Generator - UK</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+</head>
+<body>
+    <div id="app">
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-tab="invoices">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                <span>Invoices</span>
+            </button>
+            <button class="nav-item" data-tab="create">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                <span>Create</span>
+            </button>
+            <button class="nav-item" data-tab="settings">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+        <!-- Pages -->
+        <div class="pages">
+            <!-- Invoices Page -->
+            <section class="page active" id="page-invoices">
+                <header class="header">
+                    <h1>Invoices</h1>
+                </header>
+                <div class="content" id="invoices-list">
+                    <div class="empty-state" id="empty-invoices">
+                        <svg viewBox="0 0 24 24" width="64" height="64"><path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        <p>No invoices yet</p>
+                        <p class="subtitle">Create your first invoice</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Invoice Page -->
+            <section class="page" id="page-create">
+                <header class="header">
+                    <h1>New Invoice</h1>
+                </header>
+                <div class="content">
+                    <form id="invoice-form">
+                        <div class="form-section">
+                            <h3>Client Details</h3>
+                            <div class="form-group">
+                                <label>Client Name *</label>
+                                <input type="text" id="clientName" required placeholder="Enter client name">
+                            </div>
+                            <div class="form-group">
+                                <label>Company</label>
+                                <input type="text" id="clientCompany" placeholder="Company name (optional)">
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="clientEmail" required placeholder="client@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" id="clientAddress" placeholder="Client address">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>VAT Settings</h3>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span>VAT Registered</span>
+                                    <input type="checkbox" id="isVATRegistered" checked>
+                                    <span class="toggle-switch"></span>
+                                </label>
+                            </div>
+                            <div class="form-group" id="vatRateGroup">
+                                <label>VAT Rate</label>
+                                <select id="vatRate">
+                                    <option value="0.20">Standard (20%)</option>
+                                    <option value="0.05">Reduced (5%)</option>
+                                    <option value="0">Zero (0%)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-header">
+                                <h3>Line Items</h3>
+                                <button type="button" class="btn-small" id="addItemBtn">+ Add Item</button>
+                            </div>
+                            <div id="lineItems">
+                                <!-- Items will be added here -->
+                            </div>
+                        </div>
+
+                        <div class="form-section totals-section">
+                            <div class="totals">
+                                <div class="total-row">
+                                    <span>Subtotal</span>
+                                    <span id="subtotal">£0.00</span>
+                                </div>
+                                <div class="total-row vat" id="vatRow">
+                                    <span>VAT</span>
+                                    <span id="vat">£0.00</span>
+                                </div>
+                                <div class="total-row grand-total">
+                                    <span>TOTAL</span>
+                                    <span id="total">£0.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="notes" rows="3" placeholder="Additional notes..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Save Invoice</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Settings Page -->
+            <section class="page" id="page-settings">
+                <header class="header">
+                    <h1>Settings</h1>
+                </header>
+                <div class="content">
+                    <form id="settings-form">
+                        <div class="form-section">
+                            <h3>Business Information</h3>
+                            <div class="form-group">
+                                <label>Business Name</label>
+                                <input type="text" id="businessName" placeholder="Your business name">
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" id="businessAddress" placeholder="Your business address">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="businessEmail" placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="businessPhone" placeholder="Your phone number">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>VAT & Companies House</h3>
+                            <div class="form-group">
+                                <label>VAT Number</label>
+                                <input type="text" id="vatNumber" placeholder="GB123456789">
+                            </div>
+                            <div class="form-group">
+                                <label>Companies House Number</label>
+                                <input type="text" id="companiesHouse" placeholder="12345678">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Bank Details</h3>
+                            <div class="form-group">
+                                <label>Sort Code</label>
+                                <input type="text" id="sortCode" placeholder="12-34-56">
+                            </div>
+                            <div class="form-group">
+                                <label>Account Number</label>
+                                <input type="text" id="accountNumber" placeholder="12345678">
+                            </div>
+                            <div class="form-group">
+                                <label>Account Name</label>
+                                <input type="text" id="accountName" placeholder="Your account name">
+                            </div>
+                            <div class="form-group">
+                                <label>Bank Name</label>
+                                <input type="text" id="bankName" placeholder="Bank name">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Save Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- Invoice Detail Modal -->
+        <div class="modal" id="invoiceModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Invoice</h2>
+                    <button class="close-btn" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body" id="invoiceDetail">
+                    <!-- Invoice details will be shown here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="downloadPDF">Download PDF</button>
+                    <button class="btn-primary" id="shareInvoice">Share</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script src="js/jspdf.umd.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
