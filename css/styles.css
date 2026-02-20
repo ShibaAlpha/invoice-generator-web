@@ -277,6 +277,10 @@ body {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+.form-group input:invalid {
+    border-color: var(--danger);
+}
+
 .form-group textarea {
     resize: vertical;
     min-height: 80px;
@@ -384,6 +388,8 @@ body {
     align-items: center;
     font-weight: 600;
     color: var(--primary);
+    min-width: 70px;
+    justify-content: flex-end;
 }
 
 /* Totals */
@@ -518,6 +524,7 @@ body {
     padding: 20px;
     max-height: 60vh;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-footer {
@@ -548,7 +555,7 @@ body {
 }
 
 .invoice-detail-section {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .invoice-detail-section h4 {
@@ -562,23 +569,45 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 16px;
+    font-size: 0.85rem;
 }
 
 .invoice-detail-table th {
     background: var(--primary);
     color: white;
-    padding: 10px;
+    padding: 8px 6px;
     text-align: left;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .invoice-detail-table td {
-    padding: 10px;
+    padding: 8px 6px;
     border-bottom: 1px solid var(--border);
+    vertical-align: top;
 }
 
-.invoice-detail-table .amount {
+.invoice-detail-table td:nth-child(1) {
+    width: 40%;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.invoice-detail-table td:nth-child(2) {
+    width: 12%;
+    text-align: center;
+}
+
+.invoice-detail-table td:nth-child(3) {
+    width: 24%;
+    text-align: right;
+}
+
+.invoice-detail-table td:nth-child(4) {
+    width: 24%;
     text-align: right;
     font-weight: 500;
 }
@@ -593,6 +622,7 @@ body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
+    font-size: 0.9rem;
 }
 
 .invoice-detail-totals .row.total {
@@ -638,8 +668,12 @@ body {
         border-radius: var(--radius);
     }
 
+    .invoice-detail-table {
+        font-size: 0.9rem;
+    }
+
     .invoice-detail-table th,
     .invoice-detail-table td {
-        padding: 12px;
+        padding: 10px 8px;
     }
 }
